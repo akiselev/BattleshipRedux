@@ -1,24 +1,29 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { createStore } from 'redux';
-import Counter from './components/Counter';
-import counter from './reducers';
+import React from "react";
+import ReactDOM from "react-dom";
+import { createStore } from "redux";
+import Game from "./components/Game";
+import state from "./reducers";
 
 const store = createStore(
-  counter,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+    state,
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
-const rootEl = document.getElementById('root');
+const rootEl = document.getElementById("root");
 
 const render = () => {
-  ReactDOM.render(
-    <Counter
-      value={store.getState().counter}
-      onIncrement={() => store.dispatch({ type: 'INCREMENT' })}
-      onDecrement={() => store.dispatch({ type: 'DECREMENT' })}
-    />,
-    rootEl,
-  );
+    let onClick = (x, y) => {
+        store.dispatch({
+            type: "FIRE",
+            x: x,
+            y: y
+        });
+        console.log(`Fired at (${x}, ${y})`);
+    };
+
+    ReactDOM.render(
+        <Game state={store.getState()} onClick={onClick} />,
+        rootEl
+    );
 };
 render();
 store.subscribe(render);
